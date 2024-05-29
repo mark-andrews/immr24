@@ -90,7 +90,8 @@ ranef(M_6) # the "zeta"s, in the diagram/equations
 
 # Linear mixed effects models ---------------------------------------------
 
-ggplot(sleepstudy, aes(x = Days, y = Reaction)) + geom_point()
+ggplot(sleepstudy, aes(x = Days, y = Reaction)) + geom_point() +
+  stat_smooth(method='lm', se = F)
 
 ggplot(sleepstudy, 
        aes(x = Days, y = Reaction, colour = Subject)
@@ -104,5 +105,27 @@ ggplot(sleepstudy,
 ggplot(sleepstudy, 
        aes(x = Days, y = Reaction, colour = Subject)
 ) + stat_smooth(method = 'lm', se = F) + geom_point() + facet_wrap(~Subject)
+
+# non multilevel linear model, i.e. simple linear regression
+# lm(Reaction ~ Days, data = sleepstudy)
+
+# multilevel linear model
+M_7 <- lmer(Reaction ~ Days + (Days|Subject), data = sleepstudy)
+
+lm(dist ~ 1 + speed, data = cars)
+lm(dist ~ 0 + speed, data = cars)
+
+
+# random slopes AND intercepts
+M_7a <- lmer(Reaction ~ 1 + Days + (1 + Days|Subject), data = sleepstudy)
+
+# what is this? random intercepts only model
+#M_7b <- lmer(Reaction ~ 1 + Days + (1|Subject), data = sleepstudy)
+
+# what is this? random slopes only model
+#M_7c <- lmer(Reaction ~ 1 + Days + (0 + Days|Subject), data = sleepstudy)
+
+
+summary(M_7)
 
 
