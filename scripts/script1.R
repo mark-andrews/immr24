@@ -90,5 +90,6 @@ ranef(M_6) # the "zeta"s, in the diagram/equations
 
 # Linear mixed effects models ---------------------------------------------
 
+ggplot(sleepstudy, aes(x = Days, y = Reaction)) + geom_point()
 
 
