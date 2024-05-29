@@ -128,4 +128,31 @@ M_7a <- lmer(Reaction ~ 1 + Days + (1 + Days|Subject), data = sleepstudy)
 
 summary(M_7)
 
+# random intercepts only
+M_8 <- lmer(Reaction ~ 1 + Days + (1|Subject), 
+            data = sleepstudy)
+
+summary(M_8)
+
+# random slopes only
+M_9 <- lmer(Reaction ~ Days + (0 + Days|Subject), 
+            data = sleepstudy)
+summary(M_9)
+
+
+# random slopes AND random intercepts AND no correlation 
+M_10 <- lmer(Reaction ~ Days + (1|Subject) + (0 + Days|Subject), 
+            data = sleepstudy)
+
+summary(M_10)
+
+# random slopes AND random intercepts AND no correlation 
+M_11 <- lmer(Reaction ~ Days + (Days||Subject), 
+             data = sleepstudy)
+
+anova(M_10, M_7)
+anova(M_8, M_10)
+anova(M_9, M_10)
+
+
 
