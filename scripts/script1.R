@@ -24,4 +24,9 @@ plogis(coef(M_2))
 # 95% confidence interval for this estimate
 plogis(confint.default(M_2))
 
+# look at the sample probabilities
+print(
+  mutate(rats_df, p = m/n), 
+  n = Inf)
+
 
