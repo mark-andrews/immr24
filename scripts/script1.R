@@ -1,5 +1,6 @@
 library(tidyverse)
 library(emmeans)
+library(lme4)
 
 rats_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/immr24/main/data/rats.csv")
 
@@ -35,3 +36,11 @@ print(
 M_3 <- glm(cbind(m, n-m) ~ factor(batch), data = rats_df, family = binomial())
 
 emmeans(M_3, specs = ~ factor(batch), type = 'response')
+
+
+# Multilevel model of all the sub-populations
+# A model of binomial models, one per each sub population
+
+M_4 <- glmer(cbind(m, n-m) ~ 1 + (1|batch),
+             data = rats_df,
+             family = binomial())
