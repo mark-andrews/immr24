@@ -52,3 +52,43 @@ plogis(fixef(M_4))
 plogis(fixef(M_4) - 2 * .66)
 plogis(fixef(M_4) + 2 * .66)
 
+# estimated probabilities for each sub-population (batch)
+plogis(coef(M_4)$batch[,1])
+
+ranef(M_4)
+
+confint(M_4) # 95% CI on the fixed effect, i.e. the mean of the normal distribution
+as.data.frame(ranef(M_4))
+
+# Random effects normal model ---------------------------------------------
+
+alcohol_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/immr24/main/data/alcohol.csv")
+
+alcohol_df_russia <- filter(alcohol_df, country == 'Russia')
+
+# assumes alcohol values are samples from a normal distribution
+M_5 <- lm(alcohol ~ 1, data = alcohol_df_russia)
+
+coef(M_5)
+sigma(M_5)
+
+M_6 <- lmer(alcohol ~ 1 + (1|country), data = alcohol_df)
+
+summary(M_6)
+
+coef(M_6) # the "mu"s, in the diagram/equations
+ranef(M_6) # the "zeta"s, in the diagram/equations
+
+# total variance = ...
+22.208 + 1.108 
+4.713 ^ 2 + 1.053 ^ 2
+
+# Intraclass correlation coefficient (ICC)
+(4.713 ^ 2) / (4.713 ^ 2 + 1.053 ^ 2)
+
+
+
+# Linear mixed effects models ---------------------------------------------
+
+
+
