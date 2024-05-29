@@ -1,4 +1,5 @@
 library(tidyverse)
+library(emmeans)
 
 rats_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/immr24/main/data/rats.csv")
 
@@ -30,3 +31,7 @@ print(
   n = Inf)
 
 
+# One probability for each sub-population (batch)
+M_3 <- glm(cbind(m, n-m) ~ factor(batch), data = rats_df, family = binomial())
+
+emmeans(M_3, specs = ~ factor(batch), type = 'response')
