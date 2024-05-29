@@ -44,3 +44,11 @@ emmeans(M_3, specs = ~ factor(batch), type = 'response')
 M_4 <- glmer(cbind(m, n-m) ~ 1 + (1|batch),
              data = rats_df,
              family = binomial())
+
+summary(M_4)
+
+plogis(fixef(M_4))
+
+plogis(fixef(M_4) - 2 * .66)
+plogis(fixef(M_4) + 2 * .66)
+
