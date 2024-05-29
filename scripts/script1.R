@@ -101,3 +101,8 @@ ggplot(sleepstudy,
 ) + stat_smooth(method = 'lm', se = F) + geom_point()
 
 
+ggplot(sleepstudy, 
+       aes(x = Days, y = Reaction, colour = Subject)
+) + stat_smooth(method = 'lm', se = F) + geom_point() + facet_wrap(~Subject)
+
+
