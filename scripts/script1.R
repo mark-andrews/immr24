@@ -96,4 +96,8 @@ ggplot(sleepstudy,
        aes(x = Days, y = Reaction, colour = Subject)
 ) + geom_point()
 
+ggplot(sleepstudy, 
+       aes(x = Days, y = Reaction, colour = Subject)
+) + stat_smooth(method = 'lm', se = F) + geom_point()
+
 
