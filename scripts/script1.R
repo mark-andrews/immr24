@@ -92,4 +92,8 @@ ranef(M_6) # the "zeta"s, in the diagram/equations
 
 ggplot(sleepstudy, aes(x = Days, y = Reaction)) + geom_point()
 
+ggplot(sleepstudy, 
+       aes(x = Days, y = Reaction, colour = Subject)
+) + geom_point()
+
 
