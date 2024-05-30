@@ -156,3 +156,13 @@ anova(M_9, M_10)
 
 
 
+# Prediction & visualization ----------------------------------------------
+
+predict(M_7)
+
+library(modelr)
+add_predictions(sleepstudy, M_7) %>% 
+  ggplot(aes(x = Days, y = Reaction, colour = Subject)) +
+  geom_point() +
+  facet_wrap(~Subject)
+
