@@ -164,5 +164,151 @@ library(modelr)
 add_predictions(sleepstudy, M_7) %>% 
   ggplot(aes(x = Days, y = Reaction, colour = Subject)) +
   geom_point() +
+  geom_line(aes(y = pred)) +
+  facet_wrap(~Subject) +
+  ggtitle('RI/RS/C')
+
+add_predictions(sleepstudy, M_8) %>% 
+  ggplot(aes(x = Days, y = Reaction, colour = Subject)) +
+  geom_point() +
+  geom_line(aes(y = pred)) +
+  facet_wrap(~Subject) +
+  ggtitle('RI')
+
+add_predictions(sleepstudy, M_9) %>% 
+  ggplot(aes(x = Days, y = Reaction, colour = Subject)) +
+  geom_point() +
+  geom_line(aes(y = pred)) +
+  facet_wrap(~Subject) +
+  ggtitle('RS')
+
+add_predictions(sleepstudy, M_11) %>% 
+  ggplot(aes(x = Days, y = Reaction, colour = Subject)) +
+  geom_point() +
+  geom_line(aes(y = pred)) +
+  facet_wrap(~Subject) +
+  ggtitle('RI/RS')
+
+
+# Model loglikelihood & deviances & LRT -----------------------------------
+
+anova(M_11, M_7)
+
+M_7_mle <- lmer(Reaction ~ Days + (Days|Subject), data = sleepstudy, REML = FALSE)
+
+M_11_mle <- lmer(Reaction ~ Days + (Days||Subject), 
+                 REML = FALSE,
+             data = sleepstudy)
+
+logLik(M_7_mle)
+deviance(M_7_mle)
+
+logLik(M_11_mle)
+deviance(M_11_mle)
+
+deviance(M_11_mle) - deviance(M_7_mle)
+
+anova(M_11_mle, M_7_mle)
+
+
+
+# P-values etc ------------------------------------------------------------
+
+M_12 <- lm(Reaction ~ Days, data = sleepstudy)
+summary(M_12)
+confint()
+
+#library(lmerTest)
+
+M_13 <- lmerTest::lmer(Reaction ~ Days + (Days|Subject), data = sleepstudy)
+
+# so don't forget about confidence intervals
+confint(M_7)
+confint(M_13)
+
+
+
+# R^2 in mixed effects ----------------------------------------------------
+
+m <- lm(dist ~ speed, data = cars)
+summary(m)$r.sq
+
+# Def 1: 1 - var of residual / var of outcome
+1 - var(residuals(m)) / var(cars$dist)
+
+# Def 2: var of predicted values/ var of outcome
+var(predict(m)) / var(cars$dist)
+
+# Def 3: var of predicted values / var of residual + var of predicted values
+var(predict(m)) / (var(predict(m)) + var(residuals(m)))
+
+# Def 4: 
+m0 <- lm(dist ~ 1, data = cars)
+1 - var(residuals(m))/var(residuals(m0))
+
+# look at fixed effect predictions AND the fixed + random predictions
+predict(M_7) # predictions based on fixed and random effects
+predict(M_7, re.form = NA) # predictions based on fixed and random effects
+
+add_predictions(sleepstudy, M_7) %>% 
+  ggplot(aes(x = Days, y = Reaction, colour = Subject)) +
+  geom_point() +
+  geom_line(aes(y = pred)) +
+  facet_wrap(~Subject) +
+  ggtitle('RI/RS/C')
+
+mutate(sleepstudy, pred = predict(M_7, re.form = NA)) %>% 
+  ggplot(aes(x = Days, y = Reaction, colour = Subject)) +
+  geom_point() +
+  geom_line(aes(y = pred)) +
+  facet_wrap(~Subject) +
+  ggtitle('RI/RS/C: fixed effects only prediction')
+
+
+# Approx 1 of R^2 in mixed effects: Conditional R^2
+var(predict(M_7)) / var(sleepstudy$Reaction)
+
+# Approx 2 of R^2 in mixed effects: Marginal R^2
+var(predict(M_7, re.form = NA)) / var(sleepstudy$Reaction)
+
+performance::r2_nakagawa(M_7)
+
+add_predictions(sleepstudy, M_7) |>
+  ggplot(aes(x = Days, y = Reaction, colour = Subject)) +
+  geom_point() +
+  geom_line(aes(y = pred)) + # adds the best fit using fixed effects and random effects
+  geom_line(data = mutate(sleepstudy, pred = predict(M_7, re.form = NA)), aes(y = pred)) + # add a best fit only using fixed effects
   facet_wrap(~Subject)
+
+
+# Nested groups -----------------------------------------------------------
+
+
+classroom_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/immr24/main/data/classroom.csv")
+
+
+ggplot(classroom_df, aes(x = ses, y = mathscore)) +
+  geom_point() +
+  stat_smooth(method = 'lm')
+
+
+M_14 <- lmer(mathscore ~ ses + (ses|schoolid), data = classroom_df)
+summary(M_14)
+confint(M_14)
+
+
+M_15 <- lmer(mathscore ~ ses + (ses|schoolid) + (ses|classid), data = classroom_df)
+M_16 <- lmer(mathscore ~ ses + (ses|schoolid) + (ses|schoolid/classid2), data = classroom_df)
+
+
+
+
+
+
+
+
+
+
+
+
 
