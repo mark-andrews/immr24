@@ -327,9 +327,39 @@ M_22 <- lmer(mathscore ~ ses + (1|schoolid) + (1|schoolid:classid2),
 lm(len ~ supp * dose, data = ToothGrowth)
 lm(len ~ supp + dose + supp:dose, data = ToothGrowth)
 
+
+M_18 <- lmer(mathscore ~ ses + (ses|schoolid) + (1|classid), data = classroom_df)
+M_14 <- lmer(mathscore ~ ses + (ses|schoolid), data = classroom_df)
+
+anova(M_14, M_18)
+
+
 # crossed structures ------------------------------------------------------
 
 
 blp_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/immr24/main/data/blp-short2.csv")
 
+blp_df <- mutate(blp_df, freq2 = scale(freq)[,1])
+
+M_23 <- lm(rt ~ freq2, data = blp_df)
+M_24 <- lmer(rt ~ freq2 + (freq2|participant), data = blp_df)
+
+M_25 <- lmer(rt ~ freq2 + (freq2|participant) + (1|spelling), data = blp_df)
+M_26 <- lmer(rt ~ freq2 + spelling + (freq2|participant), data = blp_df)
+
+summary(M_25)
+
+M_26 <- lmer(Reaction ~ 1 + (1|Subject), data = sleepstudy)
+M_27 <- lm(Reaction ~ 1 + Subject, data = sleepstudy)
+
+M_28 <- lmer(Reaction ~ 1 + (1|Days), data = sleepstudy)
+M_29 <- lm(Reaction ~ 1 + Days, data = sleepstudy)
+M_30 <- lm(Reaction ~ 1 + factor(Days), data = sleepstudy)
+
+# Bayesian models ---------------------------------------------------------
+library(brms)
+#M_7 <- lmer(Reaction ~ Days + (Days|Subject), data = sleepstudy)
+M_31 <- brm(Reaction ~ Days + (Days|Subject), data = sleepstudy)
+
+M_32 <- brm(mathscore ~ ses + (ses|schoolid) + (ses||classid), data = classroom_df)
 
