@@ -298,17 +298,38 @@ confint(M_14)
 
 
 M_15 <- lmer(mathscore ~ ses + (ses|schoolid) + (ses|classid), data = classroom_df)
-M_16 <- lmer(mathscore ~ ses + (ses|schoolid) + (ses|schoolid/classid2), data = classroom_df)
+#M_16 <- lmer(mathscore ~ ses + (ses|schoolid) + (ses|schoolid/classid2), data = classroom_df)
+
+summary(M_15)
+
+# random effects model of mathscores
+# 
+M_16 <- lmer(mathscore ~ 1 + (1|schoolid) + (1|classid), data = classroom_df)
+
+# remove correlation between random intercepts & slopes in classes
+M_17 <- lmer(mathscore ~ ses + (ses|schoolid) + (ses||classid), data = classroom_df)
+
+# remove random slopes for classes
+
+M_18 <- lmer(mathscore ~ ses + (ses|schoolid) + (1|classid), 
+             data = classroom_df)
+
+M_19 <- lmer(mathscore ~ ses + (ses|schoolid) + (1|schoolid/classid2), 
+             data = classroom_df)
+
+M_20 <- lmer(mathscore ~ ses + (1|schoolid) + (1|classid), 
+             data = classroom_df)
+M_21 <- lmer(mathscore ~ ses + (1|schoolid/classid2), 
+             data = classroom_df)
+M_22 <- lmer(mathscore ~ ses + (1|schoolid) + (1|schoolid:classid2),
+             data = classroom_df)
+
+lm(len ~ supp * dose, data = ToothGrowth)
+lm(len ~ supp + dose + supp:dose, data = ToothGrowth)
+
+# crossed structures ------------------------------------------------------
 
 
-
-
-
-
-
-
-
-
-
+blp_df <- read_csv("https://raw.githubusercontent.com/mark-andrews/immr24/main/data/blp-short2.csv")
 
 
